@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+    local-file-postgres:
+        ports:
+            - "57902:5432"
+        image: postgis/postgis:16-3.4-alpine
+        restart: always
+        volumes:
+            - "file_data:/var/lib/postgresql/data"
+        environment:
+            TZ: Asia/Tashkent
+            PGTZ: Asia/Tashkent
+            POSTGRES_DB: "terminalfiles"
+            POSTGRES_USER: "termina"
+            POSTGRES_PASSWORD: "1234"
+        networks:
+            - my-network
+
+volumes:
+    file_data:
+
+networks:
+    my-network:
+        driver: bridge
