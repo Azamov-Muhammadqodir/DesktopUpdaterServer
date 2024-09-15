@@ -14,9 +14,10 @@ public class FileService
 
     public Task RemoveAll()
     {
-        _dbContext.AppFiles.RemoveRange();
+        _dbContext.Database.ExecuteSqlRaw("TRUNCATE TABLE public.\"AppFiles\";");
         return Task.CompletedTask;
     }
+
 
     public async Task<List<AppFile>> GetAllFile()
     {
@@ -33,10 +34,19 @@ public class FileService
         var res = _dbContext.AppFiles.Add(file);
         await _dbContext.SaveChangesAsync();
     }
-
-    public async Task<AppFile> GetFileAsync(int fileId)
+    public async Task<string?> GetVersionAsync()
     {
-        return await _dbContext.AppFiles.FindAsync(fileId);
+        var result = _dbContext.AppFiles.OrderByDescending(x=>x.Id).Select(x=>x.Version).FirstOrDefault();
+        return result is not null 
+            ? result 
+            : null;
+    }
+    public async Task<AppFile?> GetFileAsync()
+    {
+        var result = _dbContext.AppFiles.OrderByDescending(x => x.Id).FirstOrDefault();
+        return result is not null
+            ? result
+            : null;
     }
 }
 public class AppFile

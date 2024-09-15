@@ -14,11 +14,20 @@ namespace AvaloniaAppUpdaterServer.Controllers
         {
             _fileService = fileService;
         }
-
-        [HttpGet("{fileId}")]
-        public async Task<IActionResult> GetFile(int fileId)
+        [HttpGet("version")]
+        public async Task<IActionResult> GetVersion()
         {
-            var file = await _fileService.GetFileAsync(fileId);
+            var version = await _fileService.GetVersionAsync();
+            if (version == null)
+                return NotFound("Last version not found");
+
+            return Ok(version);
+        }
+
+        [HttpGet("app")]
+        public async Task<IActionResult> GetFile()
+        {
+            var file = await _fileService.GetFileAsync();
             if (file == null)
                 return NotFound();
 
